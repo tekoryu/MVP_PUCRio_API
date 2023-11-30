@@ -6,41 +6,32 @@ Description: Reads a PDF file, try to recover original format
 and structures data contained in the file
 
 Additional Information:
-- The main public is Legislative Assessment bodies in Brazil.
+- The goal public is Legislative Assessment bodies in Brazil. This version
+is refined only to Senate propositions.
 """
-from pdfquery import PDFQuery
-from PyPDF2 import PdfReader
 from pdfminer.high_level import extract_text, extract_pages
+from pdfminer.layout import LTTextContainer
 
 
-def read_pdfquery(pdf_file):
-    # Lê um arquivo PDF e retorna texto cru
-    pdf = PDFQuery(pdf_file)
-    pdf.load()
+def box_analyzer(element: LTTextContainer):
+    texticulo = element.get_text()
+    element
 
-    # Use CSS-like selectors to locate the elements
-    text_elements = pdf.pq('LTTextLineHorizontal')
+def convert_pdf_to_text(pdf_file: str, footer: float, header: float):
+    #   Lê um arquivo PDF e retorna texto cru
 
-    # Extract the text from the elements
-    text = [t.text for t in text_elements]
-    pdf.tree.write('pdfXML.txt', pretty_print=True)
-    print(text)
+    output_string = ""
 
-def read_py2pdf(pdf_file):
-    # Lê um arquivo PDF e retorna texto cru
-    reader = PdfReader(pdf_file)
-    page = reader.pages[1]
-    print(page.extract_text())
-
-def read_pdfminersix(pdf_file):
-    # Lê um arquivo PDF e retorna texto cru
     for page_layout in extract_pages(pdf_file):
         for element in page_layout:
-            print(element)
+            if isinstance(element, LTTextContainer):
+                if footer < element.y0 < header:
+                    box_analyzer(element)
+                #     output_string = output_string + element.get_text()
 
+    return output_string
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    #read_pdfquery("training_files/Projeto de Lei.pdf")
-    #read_py2pdf("training_files/Projeto de Lei.pdf")
-    read_pdfminersix("training_files/Projeto de Lei.pdf")
+
+    convert_pdf_to_text("training_files/Projeto de Lei.pdf", 70, 800)
