@@ -10,24 +10,24 @@ Additional Information:
 is refined only to Senate propositions.
 """
 from pdfminer.high_level import extract_text, extract_pages
-from pdfminer.layout import LTTextContainer
+from pdfminer.layout import LTTextContainer, LAParams
 
 
 def box_analyzer(element: LTTextContainer):
     texticulo = element.get_text()
-    element
+    artigos
 
 def convert_pdf_to_text(pdf_file: str, footer: float, header: float):
     #   Lê um arquivo PDF e retorna texto cru
 
-    output_string = ""
-
-    for page_layout in extract_pages(pdf_file):
+    output_string = []
+    laparams = LAParams(line_overlap=0.1)
+    for page_layout in extract_pages(pdf_file, laparams=laparams):
         for element in page_layout:
             if isinstance(element, LTTextContainer):
                 if footer < element.y0 < header:
-                    box_analyzer(element)
-                #     output_string = output_string + element.get_text()
+                    output_string.append(element)
+                    # output_string = output_string + element.get_text()
 
     return output_string
 
