@@ -10,13 +10,13 @@ Additional Information:
 is refined only to Senate propositions.
 """
 import datetime
-from typing import Optional, Container, List, Dict, Any
+from typing import Container
 
 from pdfminer.high_level import extract_text, extract_pages
 from pdfminer.layout import LTTextContainer, LAParams
 
 
-def paginas(start: int, end: int) -> dict:
+def paginas(start: int, end: int) -> list:
     """
     Recebe uma string contendo uma int de início e fim e retorna um container
     :param start:
@@ -28,7 +28,7 @@ def paginas(start: int, end: int) -> dict:
         return []
 
     # Generate a list of dictionaries
-    indexed_dict: dict = {i: x for i, x in enumerate(range(start, end + 1))}
+    indexed_dict: list = [x for x in range(start - 1, end - 1)]
 
     return indexed_dict
 
@@ -77,15 +77,25 @@ def convert_pdf_to_text(pdf_file: str,
         for element in page_layout:
             if isinstance(element, LTTextContainer):
                 if footer < element.y0 < header:
+                    # adiciona na lista de monitoramento
                     output_list.append(element)
-                    output_string = output_string + element.get_text()
+
+                    # trata a string para remover os \\n
+                    trecho = element.get_text()
+                    trecho = trecho.replace("\n","")
+                    trecho = trecho.strip()
+                    trecho = trecho + "\n"
+                    # remove linha em branco
+                    trecho = "" if trecho == "\n" else trecho
+                    # adiciona na string final
+                    output_string = output_string + trecho
 
     return output_string, output_list
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    page_numbers = paginas(2, 40)
+    page_numbers = paginas(2, 41)
 
     texto, lista = convert_pdf_to_text("training_files/Projeto de Lei.pdf",
                                        70,
@@ -105,4 +115,4 @@ if __name__ == '__main__':
 
     # Lista
     print(len(lista))
-    print(lista[36])
+    #print(lista[36])
