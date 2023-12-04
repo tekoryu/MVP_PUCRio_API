@@ -39,25 +39,30 @@ def convert_pdf_to_text(pdf_file: str,
                         line_overlap: float,
                         line_margin: float,
                         char_margin: float,
-                        page_numbers: Container[int]
+                        page_numbers: Container[int],
+                        word_margin: float,
                         ):
     """
-    :param pdf_file:
+    :param pdf_file: float
         Path to the pdf file
-    :param footer:
+    :param footer: float
         from a x, y perspective, where starts the footer to be ignored
-    :param header:
+    :param header: float
         from a x, y perspective, where starts the header to be ignored
-    :param line_overlap:
+    :param line_overlap: float
         If two characters have more overlap than this they are considered to be on the same line.
         The overlap is specified relative to the minimum height of both characters.
-    :param line_margin:
+    :param line_margin: float
         If two lines are are close together they are considered to be part of the
         same paragraph. The margin is specified relative to the height of a line.
-    :param char_margin:
+    :param char_margin: float
         If two characters are closer together than this margin they are considered part of the same line.
         The margin is specified relative to the width of the character.
-    :param page_numbers: dict
+    :param word_margin: float
+        If two characters on the same line are further apart than this margin then they are considered to
+        be two separate words, and an intermediate space will be added for readability. The margin is
+        specified relative to the width of the character.
+    :param page_numbers: list
         List of zero-indexed page numbers to extract.
     :return:
         str:
@@ -82,13 +87,13 @@ def convert_pdf_to_text(pdf_file: str,
 
                     # trata a string para remover as quebras de linha originais
                     trecho = element.get_text()
-                    trecho = trecho.replace("\n","")
+                    trecho = trecho.replace("\n", "")
                     trecho = trecho.strip()
                     trecho = trecho + "\n"
 
                     # remove linha em branco
                     trecho = "" if trecho == "\n" else trecho
-                    
+
                     # adiciona na string final
                     output_string = output_string + trecho
 
@@ -97,15 +102,16 @@ def convert_pdf_to_text(pdf_file: str,
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    page_numbers = paginas(2, 41)
+    page_numbers = paginas(1, 47)
 
-    texto, lista = convert_pdf_to_text("../training_files/Projeto de Lei.pdf",
+    texto, lista = convert_pdf_to_text("../training_files/PL das Bets.pdf",
                                        70,
-                                       800,
+                                       750,
                                        0.001,
-                                       1.35,
+                                       2.0,
                                        3.0,
                                        page_numbers,
+                                       0.1,
                                        )
 
     timestamp = datetime.datetime.timestamp(datetime.datetime.now())
