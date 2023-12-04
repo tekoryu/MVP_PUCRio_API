@@ -14,15 +14,17 @@ from model.task import Task
 
 class Project(Base):
     """
-    The model Project has identifying attributes, i.e name and description about the files that will be
-    scanned down. Are they legislative initiatives? Are they books? Are they articles? That is the place.
+    The model Project has identifying attributes, i.e name and description about
+    the files that will be scanned down. Are they legislative initiatives?Are
+    they books? Are they articles? That is the place.
     """
     __tablename__ = 'project'
 
     id = Column("id", Integer, primary_key=True)
     name = Column("name", String(255), unique=True)
     description = Column("description", Text)
-    date_created = Column("date_created", DateTime, default=datetime.now)
+    date_created = Column("date_created",
+                          DateTime, default=datetime.now)
 
     def __init__(self, name: str, description: str):
         """
