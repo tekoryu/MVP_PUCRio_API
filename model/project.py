@@ -6,10 +6,11 @@ Description: Creates the Project model.
 """
 from datetime import datetime
 
-from model import Base
 from sqlalchemy import Column, String, Integer, DateTime, Text
+from sqlalchemy.orm import relationship
 
 from model.task import Task
+from model import Base
 
 
 class Project(Base):
@@ -25,6 +26,9 @@ class Project(Base):
     description = Column("description", Text)
     date_created = Column("date_created",
                           DateTime, default=datetime.now)
+
+    # relationship one-to-many
+    task = relationship("Task")
 
     def __init__(self, name: str, description: str):
         """
