@@ -80,13 +80,15 @@ def convert_pdf_to_text(pdf_file: str,
                     # adiciona na lista de monitoramento
                     output_list.append(element)
 
-                    # trata a string para remover os \\n
+                    # trata a string para remover as quebras de linha originais
                     trecho = element.get_text()
                     trecho = trecho.replace("\n","")
                     trecho = trecho.strip()
                     trecho = trecho + "\n"
+
                     # remove linha em branco
                     trecho = "" if trecho == "\n" else trecho
+                    
                     # adiciona na string final
                     output_string = output_string + trecho
 
@@ -114,5 +116,5 @@ if __name__ == '__main__':
     text_file.close()
 
     # Lista
-    print(len(lista))
+    print(__name__)
     #print(lista[36])
