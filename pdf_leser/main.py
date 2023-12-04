@@ -99,7 +99,7 @@ def convert_pdf_to_text(pdf_file: str,
 if __name__ == '__main__':
     page_numbers = paginas(2, 41)
 
-    texto, lista = convert_pdf_to_text("training_files/Projeto de Lei.pdf",
+    texto, lista = convert_pdf_to_text("../training_files/Projeto de Lei.pdf",
                                        70,
                                        800,
                                        0.001,
@@ -114,7 +114,3 @@ if __name__ == '__main__':
     text_file = open(f"outputs/data{timestamp}.txt", "w")
     text_file.write(texto)
     text_file.close()
-
-    # Lista
-    print(__name__)
-    #print(lista[36])
