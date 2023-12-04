@@ -33,3 +33,11 @@ class Project(Base):
         """
         self.name = name
         self.description = description
+
+    def add_task(self, task:Task):
+        """
+        Add new task to the project
+
+        :param task: Task object
+        """
+        pass
