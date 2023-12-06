@@ -67,6 +67,7 @@ def show_project(project: Project):
         "date_created": project.date_created,
     }
 
+
 def show_projects(projects: List[Project]):
     """
         Return a representation of the projects, using ProjectViewSchema
