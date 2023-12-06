@@ -15,7 +15,7 @@ from model import Base
 
 class Project(Base):
     """
-    The model Project has identifying attributes, i.e name and description about
+    The model Project has identity attributes, i.e. name or description about
     the files that will be scanned down. Are they legislative initiatives?Are
     they books? Are they articles? That is the place.
     """
