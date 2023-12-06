@@ -7,6 +7,8 @@ interact with the API.
 """
 from flask import Flask
 
+from model.project import Project
+
 app = Flask(__name__)
 
 
@@ -18,9 +20,13 @@ def home():
     return "Hello, world!"
 
 
+@app.route("/project")
 def add_project():
     """
     Add a new project to DB.
 
     Returns the recent added project.
     """
+    project = Project(
+
+    )
