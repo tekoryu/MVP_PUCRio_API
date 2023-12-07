@@ -108,7 +108,7 @@ def get_project(query: ProjectSearchSchema):
 
     if not project:
         error_msg = "Project not found. Consider recheck your spelling."
-        logger.warning(f"Project not found. The name '{project_id}' do not "
+        logger.warning(f"Project not found. The name '{project_name}' do not "
                        f"correspond to a item in DB.")
         return {"message": error_msg}
     else:
