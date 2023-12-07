@@ -6,3 +6,4 @@ from schemas.project import (ProjectSchema,
                              show_project,
                              show_projects,
                              )
+from schemas.error import ErrorSchema

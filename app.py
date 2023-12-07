@@ -5,24 +5,39 @@ Date: 04/12/2023
 Description: First file called by flask. Contains routes and methods to
 interact with the API.
 """
-from flask import Flask
+from flask import redirect
 from sqlalchemy.orm import Session
+from flask_openapi3 import OpenAPI, Info, Tag
 
 from model.project import Project
-from schemas import ProjectSchema, show_project
-
-app = Flask(__name__)
+from schemas import ProjectSchema, show_project, ProjectViewSchema, ErrorSchema
 
 
-@app.route("/")
+# flask_openapi definitions
+info = Info(title="PDF Leser", version="0.0.1")
+app = OpenAPI(__name__, info=info)
+
+# flask_openai tags
+home_tag = Tag(name="Documentação",
+               description="Seleção de documentação")
+project_tag = Tag(name="Projeto",
+                  description="""Criação de um novo projeto, visualização
+                   e remoção de um novo projeto.""")
+task_project = Tag(name="Tarefa", description="")
+
+@app.get("/", tags=[home_tag])
 def home():
     """
-    Aqui vai entrar na tela da OPenAPI, quando houver.
+    Redireciona para a tela de escolha de documentação de API
     """
-    return "Hello, world!"
+    return redirect('/openapi')
 
-
-@app.post("/project")
+@app.post("/project",
+          tags=[project_tag],
+          responses={"200":ProjectViewSchema,
+                     "409":ErrorSchema,
+                     "400":ErrorSchema}
+          )
 def add_project(form: ProjectSchema):
     """
     Add a new project to DB.
@@ -50,6 +65,3 @@ def add_project(form: ProjectSchema):
         # other errors
         error_msg = "Não foi possível salvar o projeto."
         return {"message": error_msg}, 400
-
-
-
