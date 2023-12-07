@@ -10,10 +10,13 @@ from flask import redirect
 from sqlalchemy.exc import IntegrityError
 from flask_openapi3 import OpenAPI, Info, Tag
 from logger import logger
+from urllib.parse import unquote
+
 
 from model import Session, Project, Task
 from schemas import (ProjectSchema, show_project, ProjectViewSchema,
-                     ErrorSchema, ListProjectSchema, ProjectSearchSchema)
+                     ErrorSchema, ListProjectSchema, ProjectSearchSchema,
+                     list_projects)
 
 
 # flask_openapi definitions
@@ -40,7 +43,7 @@ def home():
           responses={"200": ProjectViewSchema, "409": ErrorSchema, "400": ErrorSchema})
 def add_project(form: ProjectSchema):
     """
-    Add a new project to DB.
+    Add a new project.
 
     Returns the recent added project.
     """
@@ -76,10 +79,10 @@ def add_project(form: ProjectSchema):
          responses={"200": ListProjectSchema, "404": ErrorSchema })
 def get_projects():
     """
-    Returns a list of the projects
+    Returns a list of projects.
     """
     # busca na base os projetos
-    session.Session()
+    session = Session()
     projects = session.query(Project).all()
 
     if not projects:
@@ -94,39 +97,42 @@ def get_projects():
          responses={"200": ProjectViewSchema, "404": ErrorSchema})
 def get_project(query: ProjectSearchSchema):
     """
-    Search schema for projects
+    Get project by id.
     """
-    project_id = query.id
+    project_name = query.name
     logger.debug("Searching for project.")
     # recovers project data, if exists
     session = Session()
-    project = session.query(Project).filter(Project.id == project_id).first()
+    project = session.query(Project).filter(Project.name ==
+                                            project_name).first()
 
     if not project:
         error_msg = "Project not found. Consider recheck your spelling."
-        logger.warning(f"Project not found. The id {project_id} do not correspond to a item in DB.")
+        logger.warning(f"Project not found. The name '{project_id}' do not "
+                       f"correspond to a item in DB.")
         return {"message": error_msg}
     else:
         logger.debug(f"Project {project.name} found in the DB.")
         return show_project(project), 200
 
-@app.delete('/project',
+@app.delete('/delete/project',
             tags=[project_tag],
             responses={"200": ProjectViewSchema, "404": ErrorSchema})
 def delete_project(query: ProjectSearchSchema):
     """
-    Delete endpoint
+    Delete project.
     """
     project_name = unquote(unquote(query.name))
     logger.debug(f"Excluding project {project_name}")
 
     # performing item remotion
+    session = Session()
     project_deleted = session.query(Project).filter(Project.name ==
                                            project_name).delete()
     session.commit()
 
     if project_deleted:
-        logger_debug(f"The project was deleted.")
+        logger.debug(f"The project was deleted.")
         return {"message": f"Project {project_name} was deleted from DB."}
     else:
         error_msg = "Project not found."

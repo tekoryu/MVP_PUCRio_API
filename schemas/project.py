@@ -75,6 +75,8 @@ def list_projects(projects: List[Project]):
     result = []
     for project in projects:
         result.append({
-            "name": project.nome,
+            "name": project.name,
             "description": project.description,
         })
+
+    return {"produtos": result}
