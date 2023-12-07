@@ -7,8 +7,7 @@ Description: Creates the Task model.
 from datetime import datetime
 
 from model import Base
-from sqlalchemy import Column, Float, String, Integer, Text, DateTime
-
+from sqlalchemy import Column, Float, String, Integer, Text, DateTime, ForeignKey
 
 class Task(Base):
     """
@@ -34,6 +33,8 @@ class Task(Base):
     page_numbers = Column("decodified_text", Text)
     resulting_text = Column("resulting_text", Text)
     tokenized_text = Column("tokenized_text", Text)
+
+    project = Column(Integer, ForeignKey("project.id"), nullable=False)
 
     def __init__(self,
                  name: str,

@@ -7,6 +7,7 @@ interact with the API.
 """
 from flask import redirect
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from flask_openapi3 import OpenAPI, Info, Tag
 
 from model.project import Project
@@ -58,7 +59,7 @@ def add_project(form: ProjectSchema):
         session.commit()
         return show_project(project), 200
 
-    except integrityError as e:
+    except IntegrityError as e:
         error_msg = "Já existe um projeto com esse nome."
 
     except Exception as e:
