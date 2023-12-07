@@ -20,8 +20,8 @@ class ProjectSchema(BaseModel):
     """
 
     name: str = "Projetos de Lei"
-    description: str = """  Projetos de Lei com tramitação no Senado Federal, avulso obtido através da página
-                       de acompanhamento"""
+    description: str = "Projetos de Lei com tramitação no Senado Federal, avulso obtido através da página " \
+                       "de acompanhamento"
 
 
 class ProjectSearchSchema(BaseModel):

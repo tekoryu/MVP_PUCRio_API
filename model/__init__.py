@@ -9,8 +9,11 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database
-from model.base import Base
 
+# imports from this module
+from model.base import Base
+from model.project import Project
+from model.task import Task
 
 db_path = "database"
 

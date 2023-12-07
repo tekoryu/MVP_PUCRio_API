@@ -5,12 +5,13 @@ Date: 04/12/2023
 Description: First file called by flask. Contains routes and methods to
 interact with the API.
 """
+
 from flask import redirect
-from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from flask_openapi3 import OpenAPI, Info, Tag
+from logger import logger
 
-from model.project import Project
+from model import Session, Project, Task
 from schemas import ProjectSchema, show_project, ProjectViewSchema, ErrorSchema
 
 
@@ -50,6 +51,7 @@ def add_project(form: ProjectSchema):
         description=form.description,
     )
 
+    logger.debug(f"Adding project {project.name} to the DB.")
     try:
         # creates a connection with the base
         session = Session()
@@ -57,12 +59,16 @@ def add_project(form: ProjectSchema):
         # add new project and save changes
         session.add(project)
         session.commit()
+        logger.debug(f"Project {project.name} added with success!")
         return show_project(project), 200
 
     except IntegrityError as e:
+        logger.warning(f"Unable to add project: {e}")
         error_msg = "Já existe um projeto com esse nome."
+        return {"message": error_msg}, 409
 
     except Exception as e:
         # other errors
         error_msg = "Não foi possível salvar o projeto."
+        logger.warning(f"Unable to add project: {Exception}")
         return {"message": error_msg}, 400
