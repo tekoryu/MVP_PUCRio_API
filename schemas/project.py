@@ -68,7 +68,7 @@ def show_project(project: Project):
     }
 
 
-def show_projects(projects: List[Project]):
+def list_projects(projects: List[Project]):
     """
         Return a representation of the projects, using ProjectViewSchema
     """

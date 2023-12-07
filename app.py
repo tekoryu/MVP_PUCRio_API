@@ -12,7 +12,7 @@ from flask_openapi3 import OpenAPI, Info, Tag
 from logger import logger
 
 from model import Session, Project, Task
-from schemas import ProjectSchema, show_project, ProjectViewSchema, ErrorSchema
+from schemas import ProjectSchema, show_project, ProjectViewSchema, ErrorSchema, ListProjectSchema
 
 
 # flask_openapi definitions
@@ -36,10 +36,7 @@ def home():
 
 @app.post("/project",
           tags=[project_tag],
-          responses={"200":ProjectViewSchema,
-                     "409":ErrorSchema,
-                     "400":ErrorSchema}
-          )
+          responses={"200": ProjectViewSchema, "409": ErrorSchema, "400": ErrorSchema})
 def add_project(form: ProjectSchema):
     """
     Add a new project to DB.
@@ -72,3 +69,26 @@ def add_project(form: ProjectSchema):
         error_msg = "Não foi possível salvar o projeto."
         logger.warning(f"Unable to add project: {Exception}")
         return {"message": error_msg}, 400
+
+@app.get('/projects',
+         tags=[project_tag],
+         responses={"200": ListProjectSchema, "404": ErrorSchema })
+def get_projects():
+    """
+    Returns a list of the projects
+    """
+    # busca na base os projetos
+    session.Session()
+    projects = session.query(Project).all()
+
+    if not projects:
+        logger.debug("0 projects found.")
+        return {"projects": []}, 200
+    else:
+        logger.debug(f"{len(projects)} projects found.")
+        return list_projects(projects), 200
+
+@app.get('/produto',
+         tags)
+
+

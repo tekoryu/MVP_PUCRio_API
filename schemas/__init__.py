@@ -4,6 +4,6 @@ from schemas.project import (ProjectSchema,
                              ProjectViewSchema,
                              ProjectDeletionSchema,
                              show_project,
-                             show_projects,
+                             list_projects,
                              )
 from schemas.error import ErrorSchema
