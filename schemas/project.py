@@ -26,7 +26,7 @@ class ProjectSchema(BaseModel):
 
 class ProjectSearchSchema(BaseModel):
     """
-        Defines how a project must be searched.
+        Search param pattern for Projects
     """
     name: str = "Legislação"
 

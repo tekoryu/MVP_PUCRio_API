@@ -12,7 +12,8 @@ from flask_openapi3 import OpenAPI, Info, Tag
 from logger import logger
 
 from model import Session, Project, Task
-from schemas import ProjectSchema, show_project, ProjectViewSchema, ErrorSchema, ListProjectSchema
+from schemas import (ProjectSchema, show_project, ProjectViewSchema,
+                     ErrorSchema, ListProjectSchema, ProjectSearchSchema)
 
 
 # flask_openapi definitions
@@ -23,8 +24,8 @@ app = OpenAPI(__name__, info=info)
 home_tag = Tag(name="Documentação",
                description="Seleção de documentação")
 project_tag = Tag(name="Projeto",
-                  description="""Criação de um novo projeto, visualização
-                   e remoção de um novo projeto.""")
+                  description="Criação de um novo projeto, visualização e "
+                  "remoção de um novo projeto.")
 task_project = Tag(name="Tarefa", description="")
 
 @app.get("/", tags=[home_tag])
@@ -88,7 +89,47 @@ def get_projects():
         logger.debug(f"{len(projects)} projects found.")
         return list_projects(projects), 200
 
-@app.get('/produto',
-         tags)
+@app.get('/project',
+         tags=[project_tag],
+         responses={"200": ProjectViewSchema, "404": ErrorSchema})
+def get_project(query: ProjectSearchSchema):
+    """
+    Search schema for projects
+    """
+    project_id = query.id
+    logger.debug("Searching for project.")
+    # recovers project data, if exists
+    session = Session()
+    project = session.query(Project).filter(Project.id == project_id).first()
 
+    if not project:
+        error_msg = "Project not found. Consider recheck your spelling."
+        logger.warning(f"Project not found. The id {project_id} do not correspond to a item in DB.")
+        return {"message": error_msg}
+    else:
+        logger.debug(f"Project {project.name} found in the DB.")
+        return show_project(project), 200
 
+@app.delete('/project',
+            tags=[project_tag],
+            responses={"200": ProjectViewSchema, "404": ErrorSchema})
+def delete_project(query: ProjectSearchSchema):
+    """
+    Delete endpoint
+    """
+    project_name = unquote(unquote(query.name))
+    logger.debug(f"Excluding project {project_name}")
+
+    # performing item remotion
+    project_deleted = session.query(Project).filter(Project.name ==
+                                           project_name).delete()
+    session.commit()
+
+    if project_deleted:
+        logger_debug(f"The project was deleted.")
+        return {"message": f"Project {project_name} was deleted from DB."}
+    else:
+        error_msg = "Project not found."
+        logger.warning(f"The API was unable to perform the requested project "
+                       f"exclusion.")
+        return {"message": error_msg}, 404
