@@ -79,4 +79,4 @@ def list_projects(projects: List[Project]):
             "description": project.description,
         })
 
-    return {"produtos": result}
+    return {"projects": result}

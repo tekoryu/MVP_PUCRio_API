@@ -7,6 +7,7 @@ interact with the API.
 """
 
 from flask import redirect
+from flask_cors import CORS, cross_origin
 from sqlalchemy.exc import IntegrityError
 from flask_openapi3 import OpenAPI, Info, Tag
 from logger import logger
@@ -32,6 +33,7 @@ project_tag = Tag(name="Projeto",
 task_project = Tag(name="Tarefa", description="")
 
 @app.get("/", tags=[home_tag])
+@cross_origin()
 def home():
     """
     Redireciona para a tela de escolha de documentação de API
@@ -41,6 +43,7 @@ def home():
 @app.post("/project",
           tags=[project_tag],
           responses={"200": ProjectViewSchema, "409": ErrorSchema, "400": ErrorSchema})
+@cross_origin()
 def add_project(form: ProjectSchema):
     """
     Add a new project.
@@ -77,6 +80,7 @@ def add_project(form: ProjectSchema):
 @app.get('/projects',
          tags=[project_tag],
          responses={"200": ListProjectSchema, "404": ErrorSchema })
+@cross_origin()
 def get_projects():
     """
     Returns a list of projects.
@@ -95,6 +99,7 @@ def get_projects():
 @app.get('/project',
          tags=[project_tag],
          responses={"200": ProjectViewSchema, "404": ErrorSchema})
+@cross_origin()
 def get_project(query: ProjectSearchSchema):
     """
     Get project by id.
@@ -118,6 +123,7 @@ def get_project(query: ProjectSearchSchema):
 @app.delete('/delete/project',
             tags=[project_tag],
             responses={"200": ProjectViewSchema, "404": ErrorSchema})
+@cross_origin()
 def delete_project(query: ProjectSearchSchema):
     """
     Delete project.
