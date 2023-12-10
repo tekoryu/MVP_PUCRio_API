@@ -164,33 +164,21 @@ def add_task(form: TaskSchema):
 
     Returns the recent added project.
     """
-    default_values  = {
-        'header': 750,
-        'footer': 70,
-        'line_overlap': 0.5,
-        'line_margin':  0.5,
-        'char_margin':  2.0,
-        'page_numbers': "1-25",
-        'resulting_text': "Here goes a really long text.",
-        'tokenized_text': "Here goes a lot of words in list.",
-    }
-
-    # Default values could be pinned in the model but we prefer to put it
-    # here so we can implement a future "user defaults".
     project_id = form.project_id
+
     task = Task(
         name=form.name,
         description=form.description,
-        header=form.header or default_values["header"],
-        footer=form.footer or default_values["footer"],
-        line_overlap=form.line_overlap or default_values["line_overlap"],
-        line_margin=form.line_margin or default_value["line_margin"],
-        char_margin=form.char_margin or default_values["char_margin"],
-        page_numbers=form.page_numbers or default_values["page_numbers"],
-        resulting_text=form.resulting_text or default_values["resulting_text"],
-        tokenized_text=form.resulting_text or default_values["tokenized_text"],
+        header=form.header,
+        footer=form.footer,
+        line_overlap=form.line_overlap,
+        line_margin=form.line_margin,
+        char_margin=form.char_margin,
+        page_numbers=form.page_numbers,
+        resulting_text=form.resulting_text,
+        tokenized_text=form.resulting_text,
     )
-
+    print(task)
     logger.debug(f"Adding task {task.name} to the DB.")
 
     # creates a connection with the base

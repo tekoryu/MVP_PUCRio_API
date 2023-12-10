@@ -27,8 +27,8 @@ class Task(Base):
     date_added = Column("date_added", DateTime, default=datetime.now)
 
     # page layout attributes
-    header = Column("header", Float)
-    footer = Column("footer", Float)
+    header = Column("header", Integer)
+    footer = Column("footer", Integer)
     line_overlap = Column("line_overlap", Float)
     line_margin = Column("line_margin", Float)
     char_margin = Column("char_margin", Float)
@@ -48,8 +48,8 @@ class Task(Base):
                  line_margin: float,
                  char_margin: float,
                  page_numbers: str,
-                 resulting_text: Text,
-                 tokenized_text: Text,
+                 resulting_text: str,
+                 tokenized_text: str,
                  ):
         self.name: name
         self.description: description

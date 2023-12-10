@@ -28,7 +28,7 @@ class Project(Base):
                           DateTime, default=datetime.now)
 
     # relationship one-to-many
-    task = relationship("Task")
+    tasks = relationship("Task")
 
     def __init__(self, name: str, description: str):
         """
@@ -48,4 +48,4 @@ class Project(Base):
 
         :param task: Task object
         """
-        self.task.append(task)
+        self.tasks.append(task)

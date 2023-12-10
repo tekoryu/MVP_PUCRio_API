@@ -35,8 +35,6 @@ class TaskSchema(BaseModel):
     resulting_text: str = "Here goes a really long text."
     tokenized_text: str = "Here goes a lot of words in list."
 
-    # relationship
-
 
 class TaskSearchSchema(BaseModel):
     name: str = "Substitutivo do Relator"
