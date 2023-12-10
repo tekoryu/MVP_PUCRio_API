@@ -38,26 +38,3 @@ class Task(Base):
 
     # relacionamento, a ideia aqui é semelhante a do Django
     project = Column(Integer, ForeignKey("project.id"), nullable=False)
-
-    def __init__(self,
-                 name: str,
-                 description: str,
-                 header: float,
-                 footer: float,
-                 line_overlap: float,
-                 line_margin: float,
-                 char_margin: float,
-                 page_numbers: str,
-                 resulting_text: str,
-                 tokenized_text: str,
-                 ):
-        self.name: name
-        self.description: description
-        self.header: header
-        self.footer: footer
-        self.line_overlap: line_overlap
-        self.line_margin: line_margin
-        self.char_margin: char_margin
-        self.page_numbers: page_numbers
-        self.resulting_text: resulting_text
-        self.tokenized_text: tokenized_text
