@@ -2,9 +2,10 @@
 File: project.py
 Author: Anderson Monteiro
 Date: 06/12/2023
-Description: Here we create Pydantic classes to control data types and type hints in the application. I am not sure of
-how this will be usefull in Django apps, but I'll give it a try. A colleague mentioned the use of the Marshmallow
-library as a substitute. I'll try it in the next project.
+Description: Here we create Pydantic classes to control data types and type
+hints in the application. I am not sure of how this will be usefull in
+Django apps, but I'll give it a try. A colleague mentioned the use of the
+Marshmallow library as a substitute. I'll try it in the next project.
 """
 import datetime
 
@@ -20,8 +21,8 @@ class ProjectSchema(BaseModel):
     """
 
     name: str = "Projetos de Lei"
-    description: str = "Projetos de Lei com tramitação no Senado Federal, avulso obtido através da página " \
-                       "de acompanhamento"
+    description: str = ("Projetos de Lei com tramitação no Senado Federal,"
+                        "avulso obtido através da página de acompanhamento")
 
 
 class ProjectSearchSchema(BaseModel):
