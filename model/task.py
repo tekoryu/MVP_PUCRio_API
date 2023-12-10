@@ -30,7 +30,7 @@ class Task(Base):
     line_overlap = Column("line_overlap", Float)
     line_margin = Column("line_margin", Float)
     char_margin = Column("char_margin", Float)
-    page_numbers = Column("decodified_text", Text)
+    page_numbers = Column("page_numbers", Text)
     resulting_text = Column("resulting_text", Text)
     tokenized_text = Column("tokenized_text", Text)
 
