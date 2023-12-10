@@ -80,7 +80,7 @@ def show_task(task: Task):
     }
 
 
-def list_task(tasks: List[Task]):
+def list_tasks(tasks: List[Task]):
     result = []
     for task in tasks:
         result.append({
