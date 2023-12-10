@@ -48,4 +48,4 @@ class Project(Base):
 
         :param task: Task object
         """
-        pass
+        self.task.append(task)
