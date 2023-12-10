@@ -7,7 +7,9 @@ Description: Creates the Task model.
 from datetime import datetime
 
 from model import Base
-from sqlalchemy import Column, Float, String, Integer, Text, DateTime, ForeignKey
+from sqlalchemy import Column, Float, String, Integer, Text, DateTime, \
+    ForeignKey
+
 
 class Task(Base):
     """
@@ -30,10 +32,11 @@ class Task(Base):
     line_overlap = Column("line_overlap", Float)
     line_margin = Column("line_margin", Float)
     char_margin = Column("char_margin", Float)
-    page_numbers = Column("page_numbers", Text)
+    page_numbers = Column("page_numbers", String)
     resulting_text = Column("resulting_text", Text)
     tokenized_text = Column("tokenized_text", Text)
 
+    # relacionamento, a ideia aqui é semelhante a do Django
     project = Column(Integer, ForeignKey("project.id"), nullable=False)
 
     def __init__(self,
@@ -44,7 +47,7 @@ class Task(Base):
                  line_overlap: float,
                  line_margin: float,
                  char_margin: float,
-                 page_numbers: float,
+                 page_numbers: str,
                  resulting_text: Text,
                  tokenized_text: Text,
                  ):

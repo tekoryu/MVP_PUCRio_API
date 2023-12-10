@@ -160,36 +160,52 @@ def delete_project(query: ProjectSearchSchema):
 @cross_origin()
 def add_task(form: TaskSchema):
     """
-    Add a new project.
+    Add a new task.
 
     Returns the recent added project.
     """
+    default_values  = {
+        'header': 750,
+        'footer': 70,
+        'line_overlap': 0.5,
+        'line_margin':  0.5,
+        'char_margin':  2.0,
+        'page_numbers': "1-25",
+        'resulting_text': "Here goes a really long text.",
+        'tokenized_text': "Here goes a lot of words in list.",
+    }
+
+    # Default values could be pinned in the model but we prefer to put it
+    # here so we can implement a future "user defaults".
+    project_id = form.project_id
     task = Task(
         name=form.name,
         description=form.description,
+        header=form.header or default_values["header"],
+        footer=form.footer or default_values["footer"],
+        line_overlap=form.line_overlap or default_values["line_overlap"],
+        line_margin=form.line_margin or default_value["line_margin"],
+        char_margin=form.char_margin or default_values["char_margin"],
+        page_numbers=form.page_numbers or default_values["page_numbers"],
+        resulting_text=form.resulting_text or default_values["resulting_text"],
+        tokenized_text=form.resulting_text or default_values["tokenized_text"],
     )
 
     logger.debug(f"Adding task {task.name} to the DB.")
-    try:
-        # creates a connection with the base
-        session = Session()
 
-        # add new task and save changes
-        session.add(task)
-        session.commit()
-        logger.debug(f"Task {task.name} added with success!")
-        return show_task(task), 200
+    # creates a connection with the base
+    session = Session()
 
-    except IntegrityError as e:
-        logger.warning(f"Unable to add task: {e}")
-        error_msg = "Já existe uma tarega com esse nome."
-        return {"message": error_msg}, 409
+    # find the parent project
+    project= session.query(Project).filter(Project.id == project_id).first()
 
-    except Exception as e:
-        # other errors
-        error_msg = "Não foi possível salvar a tarefa."
-        logger.warning(f"Unable to add task: {Exception}")
-        return {"message": error_msg}, 400
+    # add new task and save changes
+    project.add_task(task)
+    session.commit()
+
+    logger.debug(f"Task added to the project #{project_id}")
+
+    return show_task(task)
 
 @app.get('/tasks',
          tags=[task_tag],

@@ -20,16 +20,17 @@ class TaskSchema(BaseModel):
  """
 
     # identity attributes
+    project_id: int = 1
     name: str = "Avulso Inicial"
     description: str = ("Projeto de Lei do Senador Acácio que altera a Lei do "
                         "Genocídio")
 
     # page layout attributes
-    header: float = 0.5
-    footer: float = 0.5
+    header: int = 750
+    footer: int = 70
     line_overlap: float = 0.5
     line_margin: float = 0.5
-    char_margin: float = 0.5
+    char_margin: float = 2.0
     page_numbers: str = "1-25"
     resulting_text: str = "Here goes a really long text."
     tokenized_text: str = "Here goes a lot of words in list."

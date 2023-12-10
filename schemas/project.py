@@ -23,7 +23,6 @@ class ProjectSchema(BaseModel):
     name: str = "Projetos de Lei"
     description: str = ("Projetos de Lei com tramitação no Senado Federal,"
                         "avulso obtido através da página de acompanhamento")
-    date_added: datetime.date = "01/04/2023"
 
 
 class ProjectSearchSchema(BaseModel):
@@ -77,6 +76,7 @@ def list_projects(projects: List[Project]):
     result = []
     for project in projects:
         result.append({
+            "id": project.id,
             "name": project.name,
             "description": project.description,
             "date_added": project.date_created.strftime("%m/%d/%Y"),
