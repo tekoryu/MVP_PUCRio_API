@@ -89,6 +89,9 @@ def list_tasks(tasks: List[Task]):
     result = []
     for task in tasks:
         result.append({
+            "id": task.id,
             "name": task.name,
+            "description": task.description,
+            "date_created": task.date_added,
         })
     return {"tasks": result}
