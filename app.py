@@ -23,7 +23,7 @@ info = Info(title="PDF Leser", version="0.0.1")
 app = OpenAPI(__name__, info=info)
 CORS(app)
 
-UPLOAD_FOLDER = '/path/to/the/uploads'
+UPLOAD_FOLDER = '/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 # flask_openai tags
