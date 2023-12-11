@@ -19,7 +19,7 @@ class ProjectSchema(BaseModel):
     """
         Defines how a project must be represented.
     """
-
+    id: str = 1
     name: str = "Projetos de Lei"
     description: str = ("Projetos de Lei com tramitação no Senado Federal,"
                         "avulso obtido através da página de acompanhamento")
