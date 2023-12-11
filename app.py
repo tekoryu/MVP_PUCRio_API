@@ -214,6 +214,26 @@ def get_tasks():
         logger.debug(f"{len(tasks)} tasks found.")
         return list_tasks(tasks), 200
 
+@app.get('/project_task',
+         tags=[task_tag],
+         responses={"200": ListTaskSchema, "404": ErrorSchema })
+@cross_origin()
+def get_tasks_by_project_id(query: TasksProjectSchema):
+    """
+    Returns a list of tasks by project id.
+    """
+    # busca na base as tarefas de um determinado projeto
+    session = Session()
+    project_id = query.project_id
+    tasks = session.query(Task).filter(Task.project == project_id).all()
+
+    if not tasks:
+        logger.debug("0 tasks found.")
+        return {"tasks": []}, 200
+    else:
+        logger.debug(f"{len(tasks)} tasks found.")
+        return list_tasks(tasks), 200
+
 @app.get('/task',
          tags=[task_tag],
          responses={"200": TaskViewSchema, "404": ErrorSchema})

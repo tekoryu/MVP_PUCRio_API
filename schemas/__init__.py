@@ -12,5 +12,6 @@ from schemas.task import (TaskSchema,
                           TaskViewSchema,
                           TaskDeletionSchema,
                           show_task,
-                          list_tasks,)
+                          list_tasks,
+                          TasksProjectSchema)
 from schemas.error import ErrorSchema
