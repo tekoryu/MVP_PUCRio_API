@@ -48,4 +48,7 @@ class Project(Base):
 
         :param task: Task object
         """
-        self.tasks.append(task)
+        try:
+            self.tasks.append(task)
+        except Exception as e:
+            print(e)

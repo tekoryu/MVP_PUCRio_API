@@ -67,6 +67,7 @@ class TasksProjectSchema(BaseModel):
     """
     project_id: int = 1
 
+
 def show_task(task: Task):
     """
         Returns a representation of a task

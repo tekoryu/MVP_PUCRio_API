@@ -18,9 +18,13 @@ from model import Session, Project, Task
 from schemas import *
 
 
-# flask_openapi definitions
+# flask and flask_openapi definitions
 info = Info(title="PDF Leser", version="0.0.1")
 app = OpenAPI(__name__, info=info)
+CORS(app)
+
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 # flask_openai tags
 home_tag = Tag(name="Documentação",
@@ -181,19 +185,30 @@ def add_task(form: TaskSchema):
     print(task)
     logger.debug(f"Adding task {task.name} to the DB.")
 
-    # creates a connection with the base
-    session = Session()
+    try:
+        # creates a connection with the base
+        session = Session()
 
-    # find the parent project
-    project= session.query(Project).filter(Project.id == project_id).first()
+        # find the parent project
+        project= session.query(Project).filter(Project.id == project_id).first()
 
-    # add new task and save changes
-    project.add_task(task)
-    session.commit()
+        # add new task and save changes
+        project.add_task(task)
+        session.commit()
 
-    logger.debug(f"Task added to the project #{project_id}")
+        logger.debug(f"Task added to the project #{project_id}")
 
-    return show_task(task)
+        return show_task(task), 200
+    except IntegrityError as e:
+        error_msg =  "Não foi posível adicionar o item"
+        logger.warning(f"Unbale to add item")
+        return {"message": error_msg}, 409
+
+    except Exception as e:
+        # other errors
+        error_msg = "Não foi possível salvar o projeto."
+        logger.warning(f"Unable to add project: {Exception}")
+        return {"message": error_msg}, 400
 
 @app.get('/tasks',
          tags=[task_tag],
@@ -246,7 +261,7 @@ def get_task(query: TaskSearchSchema):
     logger.debug("Searching for task.")
     # recovers task data, if exists
     session = Session()
-    project = session.query(Task).filter(Task.name ==
+    task = session.query(Task).filter(Task.name ==
                                             task_name).first()
 
     if not task:
@@ -255,7 +270,7 @@ def get_task(query: TaskSearchSchema):
                        f"correspond to an item in DB.")
         return {"message": error_msg}
     else:
-        logger.debug(f"Task {task.name} found in the DB.")
+        logger.debug(f"Task {task_name} found in the DB.")
         return show_task(task), 200
 
 @app.delete('/delete/task',
