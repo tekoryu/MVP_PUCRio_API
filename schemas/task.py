@@ -92,6 +92,6 @@ def list_tasks(tasks: List[Task]):
             "id": task.id,
             "name": task.name,
             "description": task.description,
-            "date_created": task.date_added,
+            "date_created": task.date_added.strftime("%m/%d/%Y"),
         })
     return {"tasks": result}
