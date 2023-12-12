@@ -35,6 +35,7 @@ class Task(Base):
     page_numbers = Column("page_numbers", String)
     resulting_text = Column("resulting_text", Text)
     tokenized_text = Column("tokenized_text", Text)
+    pdf_file = Column("pdf_file", String(1000))
 
     # relacionamento, a ideia aqui é semelhante a do Django
     project = Column(Integer, ForeignKey("project.id"), nullable=False)

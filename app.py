@@ -5,8 +5,9 @@ Date: 04/12/2023
 Description: First file called by flask. Contains routes and methods to
 interact with the API.
 """
+import os
 
-from flask import redirect
+from flask import redirect, request
 from flask_cors import CORS, cross_origin
 from sqlalchemy.exc import IntegrityError
 from flask_openapi3 import OpenAPI, Info, Tag
@@ -17,13 +18,14 @@ from urllib.parse import unquote
 from model import Session, Project, Task
 from schemas import *
 
+from pdf_leser.main import convert_pdf_to_text, paginas
 
 # flask and flask_openapi definitions
 info = Info(title="PDF Leser", version="0.0.1")
 app = OpenAPI(__name__, info=info)
 CORS(app)
 
-UPLOAD_FOLDER = '/uploads'
+UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 # flask_openai tags
@@ -170,6 +172,26 @@ def add_task(form: TaskSchema):
     """
     project_id = form.project_id
 
+    # Pega o arquivo
+    file_data = request.files['pdf_file']
+
+    # Salva o arquivo
+    upload_folder = f"{UPLOAD_FOLDER}/{form.name}/"
+    os.makedirs(upload_folder, exist_ok=True)
+    file_path = os.path.join(upload_folder, file_data.filename)
+    file_data.save(file_path)
+
+    # conerte o arqui
+    texto, lista = convert_pdf_to_text("../training_files/PL das Bets.pdf",
+                                       70,
+                                       750,
+                                       0.001,
+                                       2.0,
+                                       3.0,
+                                       page_numbers,
+                                       0.1,
+                                       )
+
     task = Task(
         name=form.name,
         description=form.description,
@@ -181,6 +203,7 @@ def add_task(form: TaskSchema):
         page_numbers=form.page_numbers,
         resulting_text=form.resulting_text,
         tokenized_text=form.resulting_text,
+        pdf_file=file_path,
     )
     print(task)
     logger.debug(f"Adding task {task.name} to the DB.")

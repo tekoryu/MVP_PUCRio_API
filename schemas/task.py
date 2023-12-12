@@ -6,7 +6,6 @@ Description: Here we create Pydantic classes to control data types and type
 hints in the application. The following schemas are task schemas, child
 attributes of a project.
 """
-import datetime
 
 from pydantic import BaseModel
 from typing import List
@@ -16,15 +15,12 @@ from model.task import Task
 
 class TaskSchema(BaseModel):
     """
-  Defines how a task must be represented
- """
-
-    # identity attributes
+    Defines how a task must be represented
+    """
     project_id: int = 1
     name: str = "Avulso Inicial"
     description: str = ("Projeto de Lei do Senador Acácio que altera a Lei do "
                         "Genocídio")
-
     # page layout attributes
     header: int = 750
     footer: int = 70
@@ -32,6 +28,7 @@ class TaskSchema(BaseModel):
     line_margin: float = 0.5
     char_margin: float = 2.0
     page_numbers: str = "1-25"
+    pdf_file: str = "Lei do Aborto.pdf"
     resulting_text: str = "Here goes a really long text."
     tokenized_text: str = "Here goes a lot of words in list."
 
@@ -96,3 +93,8 @@ def list_tasks(tasks: List[Task]):
             "date_created": task.date_added.strftime("%m/%d/%Y"),
         })
     return {"tasks": result}
+
+
+# Define Pydantic model for file input
+class FileInput(BaseModel):
+    file: bytes
