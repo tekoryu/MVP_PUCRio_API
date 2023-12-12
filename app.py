@@ -181,16 +181,20 @@ def add_task(form: TaskSchema):
     file_path = os.path.join(upload_folder, file_data.filename)
     file_data.save(file_path)
 
-    # conerte o arquivo
-    texto, lista = convert_pdf_to_text("../training_files/PL das Bets.pdf",
-                                       70,
-                                       750,
-                                       0.001,
-                                       2.0,
-                                       3.0,
+    # converte o arquivo
+    page_range = form.page_numbers.split("-")
+    page_numbers = paginas(int(page_range[0]), int(page_range[1]))
+    texto, lista = convert_pdf_to_text(file_path,
+                                       form.footer,
+                                       form.header,
+                                       form.line_overlap,
+                                       form.line_margin,
+                                       form.char_margin,
                                        page_numbers,
                                        0.1,
                                        )
+
+
 
     task = Task(
         name=form.name,
@@ -201,11 +205,11 @@ def add_task(form: TaskSchema):
         line_margin=form.line_margin,
         char_margin=form.char_margin,
         page_numbers=form.page_numbers,
-        resulting_text=form.resulting_text,
-        tokenized_text=form.resulting_text,
+        resulting_text=texto,
+        tokenized_text=form.tokenized_text,
         pdf_file=file_path,
     )
-    print(task)
+
     logger.debug(f"Adding task {task.name} to the DB.")
 
     try:
@@ -230,7 +234,7 @@ def add_task(form: TaskSchema):
     except Exception as e:
         # other errors
         error_msg = "Não foi possível salvar o projeto."
-        logger.warning(f"Unable to add project: {Exception}")
+        logger.warning(f"Unable to add project: {e}")
         return {"message": error_msg}, 400
 
 @app.get('/tasks',
