@@ -181,7 +181,7 @@ def add_task(form: TaskSchema):
     file_path = os.path.join(upload_folder, file_data.filename)
     file_data.save(file_path)
 
-    # conerte o arqui
+    # conerte o arquivo
     texto, lista = convert_pdf_to_text("../training_files/PL das Bets.pdf",
                                        70,
                                        750,
